@@ -1,0 +1,4 @@
+fastapi[standard]==0.136.1
+gunicorn==25.3.0
+uvicorn[standard]==0.46.0
+celery==5.6.3
