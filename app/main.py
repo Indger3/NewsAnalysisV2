@@ -3,6 +3,7 @@ from fastapi import FastAPI, Request
 from loguru import logger
 from app.utils.app_logger import setup_logging
 from app import settings
+from app.routes import nlp_routes
 
 app = FastAPI()
 setup_logging()
@@ -12,6 +13,8 @@ try:
     logger.info("Spacy model loaded")
 except Exception as e:
     print(str(e))
+
+app.include_router(nlp_routes.router, prefix="/v1")
 
 
 @app.middleware("http")
