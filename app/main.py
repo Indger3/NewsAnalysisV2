@@ -2,9 +2,17 @@ import time
 from fastapi import FastAPI, Request
 from loguru import logger
 from app.utils.app_logger import setup_logging
+from app import settings
 
 app = FastAPI()
 setup_logging()
+
+try:
+    logger.debug(settings.NLP.meta)
+    logger.info("Spacy model loaded")
+except Exception as e:
+    print(str(e))
+
 
 @app.middleware("http")
 async def log_requests_middleware(request: Request, call_next):

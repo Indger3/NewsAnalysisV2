@@ -1,6 +1,6 @@
 from celery import Celery
 
-import settings
+import app.settings as settings
 
 # RabbitMQ as the Broker
 broker_url = "amqp://guest:guest@localhost:5672//"
