@@ -1,122 +1,103 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { AppBar, Toolbar, Typography, Box, CssBaseline } from '@mui/material'
+import ArticlePanel from './components/ArticlePanel'
+import ResultsPanel from './components/ResultsPanel'
 
-function App() {
-  const [count, setCount] = useState(0)
+const API_BASE = 'http://localhost:8000/v1'
+
+const ENDPOINTS = {
+  entities:      `${API_BASE}/entities`,
+  summary:       `${API_BASE}/summarize`,
+  metadata:      `${API_BASE}/metadata`,
+  taxonomy:      `${API_BASE}/taxonomy`,
+  relationships: `${API_BASE}/relations`,
+}
+
+const emptyState = () => ({
+  entities: null, summary: null, metadata: null, taxonomy: null, relationships: null,
+})
+const falseState = () => ({
+  entities: false, summary: false, metadata: false, taxonomy: false, relationships: false,
+})
+
+export default function App() {
+  const [articleText, setArticleText] = useState('')
+  const [loading, setLoading]   = useState(falseState())
+  const [results, setResults]   = useState(emptyState())
+  const [errors, setErrors]     = useState(emptyState())
+
+  const isAnalyzing = Object.values(loading).some(Boolean)
+
+  async function callEndpoint(key, url, body) {
+    setLoading((prev) => ({ ...prev, [key]: true }))
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+      const data = await res.json()
+      setResults((prev) => ({ ...prev, [key]: data }))
+      setErrors((prev)  => ({ ...prev, [key]: null }))
+    } catch (err) {
+      setErrors((prev)  => ({ ...prev, [key]: err.message }))
+      setResults((prev) => ({ ...prev, [key]: null }))
+    } finally {
+      setLoading((prev) => ({ ...prev, [key]: false }))
+    }
+  }
+
+  function handleAnalyze() {
+    const body = { text: articleText }
+    setResults(emptyState())
+    setErrors(emptyState())
+    Object.entries(ENDPOINTS).forEach(([key, url]) => callEndpoint(key, url, body))
+  }
 
   return (
     <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
+      <CssBaseline />
+      <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+        <AppBar
+          position="static"
+          sx={{ bgcolor: '#0f172a', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
         >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
+          <Toolbar sx={{ gap: 2 }}>
+            <Box
+              sx={{
+                width: 28,
+                height: 28,
+                borderRadius: 1,
+                bgcolor: 'primary.main',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+              }}
+            >
+              <Typography sx={{ color: '#fff', fontWeight: 900, fontSize: '0.75rem', lineHeight: 1 }}>N</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1.5 }}>
+              <Typography sx={{ fontWeight: 800, letterSpacing: -0.3, color: '#fff', fontSize: '1rem' }}>
+                NewsAnalysis
+              </Typography>
+              <Typography sx={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.35)', fontWeight: 500, letterSpacing: 0.5 }}>
+                NLP Pipeline
+              </Typography>
+            </Box>
+          </Toolbar>
+        </AppBar>
+        <Box sx={{ display: 'flex', flexGrow: 1, overflow: 'hidden' }}>
+          <ArticlePanel
+            text={articleText}
+            onChange={setArticleText}
+            onSubmit={handleAnalyze}
+            isAnalyzing={isAnalyzing}
+          />
+          <ResultsPanel loading={loading} results={results} errors={errors} />
+        </Box>
+      </Box>
     </>
   )
 }
-
-export default App
