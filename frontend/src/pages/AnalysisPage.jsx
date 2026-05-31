@@ -12,6 +12,8 @@ import {
   analyzeRelationships,
 } from '../api/nlp.api'
 
+const DEFAULT_NLP_SETTINGS = { model: 'ai4bharat/IndicBERTv2-MLM-only', confidence: 0.6 }
+
 const emptyState = () => ({
   entities: null, summary: null, metadata: null, taxonomy: null, relationships: null,
 })
@@ -19,31 +21,36 @@ const falseState = () => ({
   entities: false, summary: false, metadata: false, taxonomy: false, relationships: false,
 })
 
-const API_CALLS = {
-  entities:      analyzeEntities,
-  summary:       analyzeSummary,
-  metadata:      analyzeMetadata,
-  taxonomy:      analyzeTaxonomy,
-  relationships: analyzeRelationships,
-}
-
 export default function AnalysisPage() {
-  const { user, logout }      = useAuth()
+  const { user, logout } = useAuth()
   const [articleText, setArticleText] = useState('')
-  const [loading, setLoading]   = useState(falseState())
-  const [results, setResults]   = useState(emptyState())
-  const [errors, setErrors]     = useState(emptyState())
+  const [loading, setLoading] = useState(falseState())
+  const [results, setResults] = useState(emptyState())
+  const [errors, setErrors] = useState(emptyState())
+  const [nlpSettings, setNlpSettings] = useState(() => {
+    try {
+      const saved = localStorage.getItem('analysis_settings')
+      return saved ? JSON.parse(saved) : DEFAULT_NLP_SETTINGS
+    } catch {
+      return DEFAULT_NLP_SETTINGS
+    }
+  })
 
   const isAnalyzing = Object.values(loading).some(Boolean)
 
-  async function callEndpoint(key, apiFn, text) {
+  function handleSettingsChange(next) {
+    setNlpSettings(next)
+    localStorage.setItem('analysis_settings', JSON.stringify(next))
+  }
+
+  async function callEndpoint(key, apiFn, text, options = {}) {
     setLoading((prev) => ({ ...prev, [key]: true }))
     try {
-      const res = await apiFn(text)
+      const res = await apiFn(text, options)
       setResults((prev) => ({ ...prev, [key]: res.data }))
-      setErrors((prev)  => ({ ...prev, [key]: null }))
+      setErrors((prev) => ({ ...prev, [key]: null }))
     } catch (err) {
-      setErrors((prev)  => ({ ...prev, [key]: err.message }))
+      setErrors((prev) => ({ ...prev, [key]: err.message }))
       setResults((prev) => ({ ...prev, [key]: null }))
     } finally {
       setLoading((prev) => ({ ...prev, [key]: false }))
@@ -53,7 +60,14 @@ export default function AnalysisPage() {
   function handleAnalyze() {
     setResults(emptyState())
     setErrors(emptyState())
-    Object.entries(API_CALLS).forEach(([key, fn]) => callEndpoint(key, fn, articleText))
+    callEndpoint('entities', analyzeEntities, articleText)
+    callEndpoint('summary', analyzeSummary, articleText, { model: nlpSettings.model })
+    callEndpoint('metadata', analyzeMetadata, articleText)
+    callEndpoint('taxonomy', analyzeTaxonomy, articleText)
+    callEndpoint('relationships', analyzeRelationships, articleText, {
+      confidence: nlpSettings.confidence,
+      model: nlpSettings.model,
+    })
   }
 
   return (
@@ -100,6 +114,8 @@ export default function AnalysisPage() {
           onChange={setArticleText}
           onSubmit={handleAnalyze}
           isAnalyzing={isAnalyzing}
+          settings={nlpSettings}
+          onSettingsChange={handleSettingsChange}
         />
         <ResultsPanel loading={loading} results={results} errors={errors} />
       </Box>

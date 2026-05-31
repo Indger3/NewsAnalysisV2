@@ -1,6 +1,6 @@
 import { post } from './rest_client'
 
-const analyze = (endpoint) => (text) => post(endpoint, { text })
+const analyze = (endpoint) => (text, options = {}) => post(endpoint, { text, ...options })
 
 export const analyzeEntities      = analyze('/v1/entities')
 export const analyzeSummary       = analyze('/v1/summarize')

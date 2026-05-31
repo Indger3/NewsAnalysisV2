@@ -1,0 +1,72 @@
+spacy_label_map:
+  PERSON: PERSON
+  ORG: ORG
+  GPE: GPE
+  LOC: LOC
+  NORP: NORP
+  FAC: FAC
+  PRODUCT: PRODUCT
+  EVENT: EVENT
+  LAW: LAW
+  ECON: ECON
+  MEDICAL: MEDICAL
+  ACTION: ACTION
+
+relations:
+  - name: works_for
+    subject: PERSON
+    object: ORG
+  - name: leads
+    subject: PERSON
+    object: ORG
+  - name: affiliated_with
+    subject: PERSON
+    object: ORG
+  - name: founded_by
+    subject: ORG
+    object: PERSON
+  - name: owns
+    subject: ORG
+    object: ORG
+  - name: acquired_by
+    subject: ORG
+    object: ORG
+  - name: part_of
+    subject: ORG
+    object: ORG
+  - name: allied_with
+    subject: ORG
+    object: ORG
+  - name: located_in
+    subject: ORG
+    object: GPE
+  - name: located_in
+    subject: FAC
+    object: GPE
+  - name: headquartered_in
+    subject: ORG
+    object: GPE
+  - name: operates_in
+    subject: ORG
+    object: GPE
+  - name: citizen_of
+    subject: PERSON
+    object: GPE
+  - name: born_in
+    subject: PERSON
+    object: GPE
+  - name: participated_in
+    subject: PERSON
+    object: EVENT
+  - name: participated_in
+    subject: ORG
+    object: EVENT
+  - name: governs
+    subject: NORP
+    object: GPE
+  - name: produces
+    subject: ORG
+    object: PRODUCT
+  - name: regulated_by
+    subject: ORG
+    object: LAW

@@ -1,13 +1,31 @@
 import time
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
-from app.utils.app_logger import setup_logging
-from app import settings
-from app.routes import nlp_routes, auth_routes
 
-app = FastAPI()
+from app import settings
+from app.bl.relation_ops import RelationOps
+from app.bl.summary_ops import SummaryOps
+from app.routes import auth_routes, nlp_routes
+from app.utils.app_logger import setup_logging
+
 setup_logging()
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    logger.debug(settings.NLP.meta)
+    logger.info("spaCy model loaded")
+    app.state.summary_ops = SummaryOps(settings.NLP)
+    logger.info("SummaryOps loaded")
+    app.state.relation_ops = RelationOps(settings.NLP)
+    logger.info("RelationOps loaded")
+    yield
+
+
+app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
@@ -16,12 +34,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-try:
-    logger.debug(settings.NLP.meta)
-    logger.info("Spacy model loaded")
-except Exception as e:
-    print(str(e))
 
 app.include_router(auth_routes.router, prefix="/v1")
 app.include_router(nlp_routes.router, prefix="/v1")

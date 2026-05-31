@@ -1,7 +1,8 @@
 import { Box, TextField, Button, Typography, CircularProgress } from '@mui/material'
 import { wordCount } from '../utils/text'
+import AnalysisSettings from './AnalysisSettings'
 
-export default function ArticlePanel({ text, onChange, onSubmit, isAnalyzing }) {
+export default function ArticlePanel({ text, onChange, onSubmit, isAnalyzing, settings, onSettingsChange }) {
   const words = wordCount(text)
 
   return (
@@ -70,6 +71,8 @@ export default function ArticlePanel({ text, onChange, onSubmit, isAnalyzing }) 
           }}
         />
       </Box>
+
+      <AnalysisSettings settings={settings} onChange={onSettingsChange} />
 
       <Box sx={{
         px: 3,
