@@ -490,7 +490,7 @@ export default function AdminPage() {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-      <AppBar position="static">
+      <AppBar position="static" color="default">
         <Toolbar sx={{ gap: 2 }}>
           <Box sx={{
             width: 28, height: 28, borderRadius: 1,
@@ -501,10 +501,10 @@ export default function AdminPage() {
             <Typography sx={{ color: '#fff', fontWeight: 900, fontSize: '0.75rem', lineHeight: 1 }}>N</Typography>
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1.5, flexGrow: 1 }}>
-            <Typography sx={{ fontWeight: 800, letterSpacing: -0.3, color: 'text.primary', fontSize: '1rem' }}>
+            <Typography sx={{ fontWeight: 800, letterSpacing: -0.5, color: 'primary.main', fontSize: '1rem' }}>
               {settings.appName}
             </Typography>
-            <Typography sx={{ fontSize: '0.72rem', color: 'text.disabled', fontWeight: 500 }}>
+            <Typography sx={{ fontSize: '0.72rem', color: 'text.disabled', fontWeight: 500, letterSpacing: 0.2 }}>
               Admin
             </Typography>
           </Box>

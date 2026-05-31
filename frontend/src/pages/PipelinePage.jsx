@@ -145,7 +145,7 @@ export default function PipelinePage() {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh', bgcolor: 'background.default' }}>
-      <AppBar position="static">
+      <AppBar position="static" color="default">
         <Toolbar sx={{ gap: 2 }}>
           <Box sx={{
             width: 28, height: 28, borderRadius: 1, bgcolor: 'primary.main',
@@ -154,10 +154,10 @@ export default function PipelinePage() {
             <Typography sx={{ color: '#fff', fontWeight: 900, fontSize: '0.75rem', lineHeight: 1 }}>N</Typography>
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1.5, flexGrow: 1 }}>
-            <Typography sx={{ fontWeight: 800, letterSpacing: -0.3, color: 'text.primary', fontSize: '1rem' }}>
+            <Typography sx={{ fontWeight: 800, letterSpacing: -0.5, color: 'primary.main', fontSize: '1rem' }}>
               {settings.appName}
             </Typography>
-            <Typography sx={{ fontSize: '0.72rem', color: 'text.disabled', fontWeight: 500 }}>
+            <Typography sx={{ fontSize: '0.72rem', color: 'text.disabled', fontWeight: 500, letterSpacing: 0.2 }}>
               Pipeline
             </Typography>
           </Box>
@@ -211,9 +211,10 @@ export default function PipelinePage() {
         ) : (
           <Box sx={{
             bgcolor: 'background.paper',
-            border: '1px solid rgba(100,136,175,0.18)',
+            border: '1px solid #e2e8f0',
             borderRadius: 2,
             overflow: 'hidden',
+            boxShadow: '0 1px 3px 0 rgba(0,0,0,0.06)',
           }}>
             <ArticleStatusTable
               articles={articles}

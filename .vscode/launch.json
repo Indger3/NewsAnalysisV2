@@ -18,6 +18,15 @@
             "python": "${workspaceFolder}/.venv/bin/python"
         },
         {
+            "name": "Celery Worker",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "celery",
+            "args": ["-A", "app.celery_main", "worker", "--loglevel=info", "--without-mingle", "--without-gossip"],
+            "cwd": "${workspaceFolder}/backend",
+            "python": "${workspaceFolder}/.venv/bin/python"
+        },
+        {
             "name": "React: Vite Dev Server",
             "type": "node",
             "request": "launch",
@@ -36,6 +45,10 @@
         {
             "name": "Full Stack: FastAPI + React",
             "configurations": ["Python Debugger: FastAPI", "React: Vite Dev Server"]
+        },
+        {
+            "name": "Full Stack: FastAPI + Celery + React",
+            "configurations": ["Python Debugger: FastAPI", "Celery Worker", "React: Vite Dev Server"]
         }
     ]
 }
