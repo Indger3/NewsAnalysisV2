@@ -2,7 +2,6 @@ import uuid
 from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from passlib.context import CryptContext
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
@@ -11,8 +10,6 @@ from app.dal.user_dal import create_user, get_user_by_email, get_user_pages
 from app.utils.auth import create_access_token
 
 router = APIRouter(tags=["auth"])
-
-_pwd_ctx = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 class LoginRequest(BaseModel):
@@ -55,8 +52,7 @@ class SignupResponse(BaseModel):
 def signup(body: SignupRequest, db: Session = Depends(get_db)):
     if get_user_by_email(db, body.email):
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Email already registered")
-    hashed = _pwd_ctx.hash(body.password)
-    user = create_user(db, body.email, body.name, hashed)
+    user = create_user(db, body.email, body.name, body.password)
     return SignupResponse(id=user.id, email=user.email, name=user.name)
 
 
@@ -71,7 +67,7 @@ def login(body: LoginRequest, db: Session = Depends(get_db)):
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    if not _pwd_ctx.verify(body.password, user.password_hash):
+    if body.password != user.password_hash:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid credentials",
