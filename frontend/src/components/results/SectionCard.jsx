@@ -2,7 +2,7 @@ import { Card, CardContent, Box, Typography } from '@mui/material'
 
 export default function SectionCard({ title, accent, children }) {
   return (
-    <Card>
+    <Card sx={{ overflow: 'hidden' }}>
       <CardContent sx={{ p: 2.5, '&:last-child': { pb: 2.5 } }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.25, mb: 2 }}>
           <Box sx={{ width: 3, height: 15, borderRadius: '2px', bgcolor: accent, flexShrink: 0 }} />

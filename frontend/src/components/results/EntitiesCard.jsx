@@ -32,11 +32,11 @@ export default function EntitiesCard({ loading, data, error }) {
           {[1, 2].map((g) => (
             <Box key={g}>
               <Skeleton variant="rounded" width={52} height={20} sx={{ mb: 0.75, borderRadius: '4px' }} />
-              <Stack direction="row" flexWrap="wrap" gap={0.75}>
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75 }}>
                 {[80, 104, 68].map((w, i) => (
                   <Skeleton key={i} variant="rounded" width={w} height={24} sx={{ borderRadius: '6px' }} />
                 ))}
-              </Stack>
+              </Box>
             </Box>
           ))}
         </Stack>
@@ -64,7 +64,7 @@ export default function EntitiesCard({ loading, data, error }) {
                     {label}
                   </Typography>
                 </Box>
-                <Stack direction="row" flexWrap="wrap" gap={0.75}>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75 }}>
                   {items.map((item) => (
                     <Chip
                       key={item}
@@ -78,7 +78,7 @@ export default function EntitiesCard({ loading, data, error }) {
                       }}
                     />
                   ))}
-                </Stack>
+                </Box>
               </Box>
             )
           })}

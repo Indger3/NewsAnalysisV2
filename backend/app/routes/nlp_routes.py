@@ -1,7 +1,8 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 from app import settings
 from app.bl.entity_ops import EntityOps
+from app.utils.auth import get_current_user
 
 router = APIRouter()
 
@@ -13,6 +14,6 @@ class TextInput(BaseModel):
 
 
 @router.post("/entities")
-def get_entities(body: TextInput):
+def get_entities(body: TextInput, _: dict = Depends(get_current_user)):
     entities = entity_ops.get_entities(body.text)
     return {"entities": entities}

@@ -1,21 +1,23 @@
-import { Typography, Skeleton, Alert, Stack, Chip } from '@mui/material'
+import { Typography, Skeleton, Alert, Chip, Box } from '@mui/material'
 import SectionCard from './SectionCard'
+
+const chipRowSx = { display: 'flex', flexWrap: 'wrap', gap: 1 }
 
 export default function TaxonomyCard({ loading, data, error }) {
   return (
     <SectionCard title="Taxonomy" accent="#0891b2">
       {loading && (
-        <Stack direction="row" flexWrap="wrap" gap={1}>
+        <Box sx={chipRowSx}>
           {[72, 96, 58, 112, 80].map((w, i) => (
             <Skeleton key={i} variant="rounded" width={w} height={26} sx={{ borderRadius: '6px' }} />
           ))}
-        </Stack>
+        </Box>
       )}
       {!loading && error && (
         <Alert severity="info" sx={{ py: 0.5 }}>Not yet available</Alert>
       )}
       {!loading && data && data.categories?.length > 0 && (
-        <Stack direction="row" flexWrap="wrap" gap={1}>
+        <Box sx={chipRowSx}>
           {data.categories.map((cat) => (
             <Chip
               key={cat}
@@ -29,7 +31,7 @@ export default function TaxonomyCard({ loading, data, error }) {
               }}
             />
           ))}
-        </Stack>
+        </Box>
       )}
       {!loading && !error && !data && (
         <Typography variant="body2" color="text.disabled" sx={{ fontStyle: 'italic' }}>

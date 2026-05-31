@@ -1,8 +1,5 @@
 import { Box, TextField, Button, Typography, CircularProgress } from '@mui/material'
-
-function wordCount(text) {
-  return text.trim() ? text.trim().split(/\s+/).length : 0
-}
+import { wordCount } from '../utils/text'
 
 export default function ArticlePanel({ text, onChange, onSubmit, isAnalyzing }) {
   const words = wordCount(text)
