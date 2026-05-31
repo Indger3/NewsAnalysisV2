@@ -1,6 +1,6 @@
 # NewsAnalysisV1
 
-AI-powered news article analysis with Named Entity Recognition. Paste a news article, authenticate, and get structured NLP analysis powered by a custom-trained spaCy model.
+AI-powered news article analysis pipeline. Paste a news article, authenticate, and get structured NLP analysis — entity recognition, summarization, and relation extraction — powered by custom-trained spaCy and transformer models.
 
 **Architecture:** React SPA → FastAPI backend → spaCy NLP pipeline
 
@@ -41,9 +41,11 @@ NewsAnalysisV1/
 │   │   ├── celery_main.py              # Celery worker config
 │   │   ├── routes/
 │   │   │   ├── auth_routes.py          # Login endpoint
-│   │   │   └── nlp_routes.py           # Entity extraction endpoint
+│   │   │   └── nlp_routes.py           # NLP endpoints (entities, summarize, relations)
 │   │   ├── bl/
-│   │   │   └── entity_ops.py           # NER business logic
+│   │   │   ├── entity_ops.py           # NER business logic
+│   │   │   ├── summary_ops.py          # Summarization business logic
+│   │   │   └── relation_ops.py         # Relation extraction business logic
 │   │   ├── utils/
 │   │   │   ├── auth.py                 # JWT creation & validation
 │   │   │   └── app_logger.py           # Loguru setup
@@ -76,11 +78,15 @@ NewsAnalysisV1/
 
 Base URL prefix: `/v1`
 
-| Method | Path | Auth | Description |
-|---|---|---|---|
-| GET | `/` | No | Health check / welcome |
-| POST | `/auth/login` | No | Login and receive JWT bearer token |
-| POST | `/entities` | Bearer | Extract named entities from article text |
+| Method | Path | Auth | Status | Description |
+|---|---|---|---|---|
+| GET | `/` | No | ✅ | Health check / welcome |
+| POST | `/auth/login` | No | ✅ | Login and receive JWT bearer token |
+| POST | `/entities` | Bearer | ✅ | Extract named entities from article text |
+| POST | `/summarize` | Bearer | ✅ | Summarize article text |
+| POST | `/relations` | Bearer | ✅ | Extract entity relationships as triples |
+| POST | `/metadata` | Bearer | 🚧 | Extract article metadata |
+| POST | `/taxonomy` | Bearer | 🚧 | Classify article into taxonomy categories |
 
 ### Auth Flow
 ```
@@ -103,6 +109,22 @@ Body: { "text": "<article text>" }
 Response: { "entities": [{ "text": "...", "label": "..." }, ...] }
 ```
 
+### Summarization
+```
+POST /v1/summarize
+Authorization: Bearer <token>
+Body: { "text": "<article text>", "n": 3 }   // n = number of sentences (optional)
+```
+
+### Relation Extraction
+```
+POST /v1/relations
+Authorization: Bearer <token>
+Body: { "text": "<article text>", "confidence": 0.6 }   // confidence threshold (optional)
+
+Response: { "triples": [{ "subject": "...", "predicate": "...", "object": "..." }, ...] }
+```
+
 ---
 
 ## Frontend Pages
@@ -110,7 +132,7 @@ Response: { "entities": [{ "text": "...", "label": "..." }, ...] }
 | Page | Route | Access | Description |
 |---|---|---|---|
 | Login | `/login` | Public | Username/password form; redirects to analysis on success |
-| Analysis | `/` | Protected | Article input + NER results; auto-redirects to `/login` if unauthenticated |
+| Analysis | `/` | Protected | Article input + results panel (entities, summary, relations, metadata, taxonomy); auto-redirects to `/login` if unauthenticated |
 
 ---
 
