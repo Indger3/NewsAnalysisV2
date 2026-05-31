@@ -8,7 +8,7 @@ from loguru import logger
 from app import settings
 from app.bl.relation_ops import RelationOps
 from app.bl.summary_ops import SummaryOps
-from app.routes import auth_routes, ingest_routes, nlp_routes, pipeline_routes
+from app.routes import admin_routes, auth_routes, ingest_routes, nlp_routes, pipeline_routes
 from app.utils.app_logger import setup_logging
 
 setup_logging()
@@ -39,6 +39,7 @@ app.include_router(auth_routes.router, prefix="/v1")
 app.include_router(nlp_routes.router, prefix="/v1")
 app.include_router(ingest_routes.router, prefix="/v1")
 app.include_router(pipeline_routes.router, prefix="/v1")
+app.include_router(admin_routes.router, prefix="/v1")
 
 
 @app.middleware("http")

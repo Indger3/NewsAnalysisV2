@@ -1,7 +1,8 @@
 from typing import Optional
 import datetime
+import uuid
 
-from sqlalchemy import ARRAY, BigInteger, CheckConstraint, DateTime, ForeignKeyConstraint, Index, Integer, PrimaryKeyConstraint, REAL, SmallInteger, Text, UniqueConstraint, text
+from sqlalchemy import ARRAY, BigInteger, Boolean, CheckConstraint, Column, DateTime, ForeignKeyConstraint, Index, Integer, PrimaryKeyConstraint, REAL, SmallInteger, Table, Text, UniqueConstraint, Uuid, text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
@@ -37,6 +38,57 @@ class Articles(Base):
     entities: Mapped[list['Entities']] = relationship('Entities', back_populates='article')
     relationships: Mapped[list['Relationships']] = relationship('Relationships', back_populates='article')
     workflow_step_executions: Mapped[list['WorkflowStepExecutions']] = relationship('WorkflowStepExecutions', back_populates='article')
+
+
+class Pages(Base):
+    __tablename__ = 'pages'
+    __table_args__ = (
+        PrimaryKeyConstraint('id', name='pages_pkey'),
+        UniqueConstraint('slug', name='pages_slug_key'),
+        {'schema': 'public'}
+    )
+
+    id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, server_default=text('gen_random_uuid()'))
+    slug: Mapped[str] = mapped_column(Text, nullable=False)
+    label: Mapped[str] = mapped_column(Text, nullable=False)
+    icon: Mapped[Optional[str]] = mapped_column(Text)
+
+    role: Mapped[list['Roles']] = relationship('Roles', secondary='public.role_pages', back_populates='page')
+
+
+class Roles(Base):
+    __tablename__ = 'roles'
+    __table_args__ = (
+        PrimaryKeyConstraint('id', name='roles_pkey'),
+        UniqueConstraint('name', name='roles_name_key'),
+        {'schema': 'public'}
+    )
+
+    id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, server_default=text('gen_random_uuid()'))
+    name: Mapped[str] = mapped_column(Text, nullable=False)
+    created_at: Mapped[datetime.datetime] = mapped_column(DateTime(True), nullable=False, server_default=text('now()'))
+    description: Mapped[Optional[str]] = mapped_column(Text)
+
+    page: Mapped[list['Pages']] = relationship('Pages', secondary='public.role_pages', back_populates='role')
+    user: Mapped[list['Users']] = relationship('Users', secondary='public.user_roles', back_populates='role')
+
+
+class Users(Base):
+    __tablename__ = 'users'
+    __table_args__ = (
+        PrimaryKeyConstraint('id', name='users_pkey'),
+        UniqueConstraint('email', name='users_email_key'),
+        {'schema': 'public'}
+    )
+
+    id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, server_default=text('gen_random_uuid()'))
+    email: Mapped[str] = mapped_column(Text, nullable=False)
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, server_default=text('true'))
+    created_at: Mapped[datetime.datetime] = mapped_column(DateTime(True), nullable=False, server_default=text('now()'))
+    name: Mapped[Optional[str]] = mapped_column(Text)
+    password_hash: Mapped[Optional[str]] = mapped_column(Text)
+
+    role: Mapped[list['Roles']] = relationship('Roles', secondary='public.user_roles', back_populates='user')
 
 
 class ArticleMetadata(Base):
@@ -126,6 +178,28 @@ class Entities(Base):
     article: Mapped['Articles'] = relationship('Articles', back_populates='entities')
     relationships_object_entity: Mapped[list['Relationships']] = relationship('Relationships', foreign_keys='[Relationships.object_entity_id]', back_populates='object_entity')
     relationships_subject_entity: Mapped[list['Relationships']] = relationship('Relationships', foreign_keys='[Relationships.subject_entity_id]', back_populates='subject_entity')
+
+
+t_role_pages = Table(
+    'role_pages', Base.metadata,
+    Column('role_id', Uuid, primary_key=True),
+    Column('page_id', Uuid, primary_key=True),
+    ForeignKeyConstraint(['page_id'], ['public.pages.id'], ondelete='CASCADE', name='role_pages_page_id_fkey'),
+    ForeignKeyConstraint(['role_id'], ['public.roles.id'], ondelete='CASCADE', name='role_pages_role_id_fkey'),
+    PrimaryKeyConstraint('role_id', 'page_id', name='role_pages_pkey'),
+    schema='public'
+)
+
+
+t_user_roles = Table(
+    'user_roles', Base.metadata,
+    Column('user_id', Uuid, primary_key=True),
+    Column('role_id', Uuid, primary_key=True),
+    ForeignKeyConstraint(['role_id'], ['public.roles.id'], ondelete='CASCADE', name='user_roles_role_id_fkey'),
+    ForeignKeyConstraint(['user_id'], ['public.users.id'], ondelete='CASCADE', name='user_roles_user_id_fkey'),
+    PrimaryKeyConstraint('user_id', 'role_id', name='user_roles_pkey'),
+    schema='public'
+)
 
 
 class Relationships(Base):

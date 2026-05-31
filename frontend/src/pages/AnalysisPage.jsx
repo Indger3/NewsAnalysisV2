@@ -95,16 +95,27 @@ export default function AnalysisPage() {
               NLP Pipeline
             </Typography>
           </Box>
-          <Button
-            size="small"
-            onClick={() => navigate('/pipeline')}
-            sx={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem', textTransform: 'none', '&:hover': { color: '#fff' } }}
-          >
-            Pipeline
-          </Button>
+          {user?.pages?.some((p) => p.slug === 'pipeline') && (
+            <Button
+              size="small"
+              onClick={() => navigate('/pipeline')}
+              sx={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem', textTransform: 'none', '&:hover': { color: '#fff' } }}
+            >
+              Pipeline
+            </Button>
+          )}
+          {user?.pages?.some((p) => p.slug === 'admin') && (
+            <Button
+              size="small"
+              onClick={() => navigate('/admin')}
+              sx={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem', textTransform: 'none', '&:hover': { color: '#fff' } }}
+            >
+              Admin
+            </Button>
+          )}
           {user && (
             <Typography sx={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.45)', mr: 1 }}>
-              {user.username}
+              {user.email}
             </Typography>
           )}
           <Button

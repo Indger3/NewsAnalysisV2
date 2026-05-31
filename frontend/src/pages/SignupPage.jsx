@@ -1,38 +1,37 @@
 import { useState } from 'react'
-import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   Alert, Box, Button, Card, CardContent,
   CircularProgress, TextField, Typography,
 } from '@mui/material'
-import { login as loginApi } from '../api/auth.api'
-import { useAuth } from '../contexts/AuthContext'
+import { signup as signupApi } from '../api/auth.api'
 import settings from '../settings'
 
-export default function LoginPage() {
-  const navigate            = useNavigate()
-  const [params]            = useSearchParams()
-  const { login }           = useAuth()
-  const [email, setEmail]   = useState('')
-  const [password, setPassword] = useState('')
-  const [loading, setLoading]   = useState(false)
-  const [error, setError]       = useState(null)
+export default function SignupPage() {
+  const navigate = useNavigate()
+  const [email, setEmail]         = useState('')
+  const [name, setName]           = useState('')
+  const [password, setPassword]   = useState('')
+  const [confirm, setConfirm]     = useState('')
+  const [loading, setLoading]     = useState(false)
+  const [error, setError]         = useState(null)
 
-  const justRegistered = params.get('registered') === '1'
+  const passwordMismatch = confirm && password !== confirm
 
   async function handleSubmit(e) {
     e.preventDefault()
+    if (passwordMismatch) return
     setLoading(true)
     setError(null)
     try {
-      const res = await loginApi(email, password)
-      login(res.data.access_token, res.data.user)
-      navigate('/', { replace: true })
+      await signupApi(email, password, name || undefined)
+      navigate('/login?registered=1', { replace: true })
     } catch (err) {
-      setError(
-        err.response?.status === 401
-          ? 'Invalid credentials. Please try again.'
-          : 'Unable to connect. Check that the backend is running.'
-      )
+      if (err.response?.status === 409) {
+        setError('An account with this email already exists.')
+      } else {
+        setError('Unable to connect. Check that the backend is running.')
+      }
     } finally {
       setLoading(false)
     }
@@ -65,16 +64,11 @@ export default function LoginPage() {
             </Box>
           </Box>
 
-          <Typography variant="h6" fontWeight={700} sx={{ mb: 0.5 }}>Sign in</Typography>
+          <Typography variant="h6" fontWeight={700} sx={{ mb: 0.5 }}>Create account</Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
-            Enter your credentials to continue.
+            Fill in your details to register. An admin will assign your access.
           </Typography>
 
-          {justRegistered && (
-            <Alert severity="success" sx={{ mb: 2 }}>
-              Account created! Sign in to continue.
-            </Alert>
-          )}
           {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
           <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -89,30 +83,49 @@ export default function LoginPage() {
               disabled={loading}
             />
             <TextField
+              label="Name (optional)"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              fullWidth
+              autoComplete="name"
+              disabled={loading}
+            />
+            <TextField
               label="Password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               fullWidth
-              autoComplete="current-password"
+              autoComplete="new-password"
               disabled={loading}
+            />
+            <TextField
+              label="Confirm password"
+              type="password"
+              value={confirm}
+              onChange={(e) => setConfirm(e.target.value)}
+              fullWidth
+              autoComplete="new-password"
+              disabled={loading}
+              error={passwordMismatch}
+              helperText={passwordMismatch ? 'Passwords do not match' : ''}
             />
             <Button
               type="submit"
               variant="contained"
               size="large"
               fullWidth
-              disabled={!email || !password || loading}
+              disabled={!email || !password || !confirm || !!passwordMismatch || loading}
               startIcon={loading ? <CircularProgress size={16} color="inherit" /> : null}
               sx={{ mt: 1 }}
             >
-              {loading ? 'Signing in…' : 'Sign in'}
+              {loading ? 'Creating account…' : 'Create account'}
             </Button>
           </Box>
 
           <Typography variant="body2" color="text.secondary" sx={{ mt: 3, textAlign: 'center' }}>
-            Don't have an account?{' '}
-            <Link to="/signup" style={{ color: 'inherit', fontWeight: 600 }}>Sign up</Link>
+            Already have an account?{' '}
+            <Link to="/login" style={{ color: 'inherit', fontWeight: 600 }}>Sign in</Link>
           </Typography>
         </CardContent>
       </Card>
