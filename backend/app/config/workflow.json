@@ -1,0 +1,30 @@
+{
+  "name": "news_analysis",
+  "version": "1.0",
+  "steps": [
+    {
+      "order": 1,
+      "name": "summarize",
+      "task": "pipeline.summarize",
+      "description": "Extractive summarization",
+      "config": {
+        "n_sentences": 3
+      }
+    },
+    {
+      "order": 2,
+      "name": "entities",
+      "task": "pipeline.entities",
+      "description": "Named entity recognition"
+    },
+    {
+      "order": 3,
+      "name": "relations",
+      "task": "pipeline.relations",
+      "description": "Relation extraction",
+      "config": {
+        "confidence_threshold": 0.6
+      }
+    }
+  ]
+}

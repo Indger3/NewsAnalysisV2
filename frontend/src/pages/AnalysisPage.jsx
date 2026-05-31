@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { AppBar, Toolbar, Typography, Box, Button } from '@mui/material'
 import ArticlePanel from '../components/ArticlePanel'
 import ResultsPanel from '../components/ResultsPanel'
@@ -23,6 +24,7 @@ const falseState = () => ({
 
 export default function AnalysisPage() {
   const { user, logout } = useAuth()
+  const navigate = useNavigate()
   const [articleText, setArticleText] = useState('')
   const [loading, setLoading] = useState(falseState())
   const [results, setResults] = useState(emptyState())
@@ -93,6 +95,13 @@ export default function AnalysisPage() {
               NLP Pipeline
             </Typography>
           </Box>
+          <Button
+            size="small"
+            onClick={() => navigate('/pipeline')}
+            sx={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem', textTransform: 'none', '&:hover': { color: '#fff' } }}
+          >
+            Pipeline
+          </Button>
           {user && (
             <Typography sx={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.45)', mr: 1 }}>
               {user.username}
