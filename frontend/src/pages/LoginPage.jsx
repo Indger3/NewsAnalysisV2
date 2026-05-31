@@ -51,7 +51,8 @@ export default function LoginPage() {
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 4 }}>
             <Box sx={{
               width: 34, height: 34, borderRadius: 1,
-              bgcolor: '#0f172a',
+              bgcolor: 'rgba(255,255,255,0.06)',
+              border: '1px solid rgba(100,136,175,0.2)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               flexShrink: 0,
             }}>

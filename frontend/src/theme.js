@@ -2,22 +2,26 @@ import { createTheme } from '@mui/material/styles'
 
 export default createTheme({
   palette: {
+    mode: 'dark',
     primary: {
-      main: '#2563eb',
-      dark: '#1d4ed8',
+      main: '#3b82f6',
+      dark: '#2563eb',
       light: '#60a5fa',
       contrastText: '#fff',
     },
     background: {
-      default: '#f1f5f9',
-      paper: '#ffffff',
+      default: '#0c1628',
+      paper: '#111f33',
     },
     text: {
-      primary: '#0f172a',
-      secondary: '#64748b',
-      disabled: '#94a3b8',
+      primary: '#e2e8f0',
+      secondary: '#94a3b8',
+      disabled: '#475569',
     },
-    divider: '#e2e8f0',
+    divider: 'rgba(100,136,175,0.15)',
+    success: { main: '#22c55e', dark: '#16a34a' },
+    error: { main: '#ef4444' },
+    warning: { main: '#f59e0b' },
   },
   typography: {
     fontFamily: [
@@ -43,8 +47,8 @@ export default createTheme({
       defaultProps: { elevation: 0 },
       styleOverrides: {
         root: {
-          border: '1px solid #e2e8f0',
-          boxShadow: '0 1px 3px 0 rgba(0,0,0,0.06), 0 1px 2px -1px rgba(0,0,0,0.04)',
+          border: '1px solid rgba(100,136,175,0.18)',
+          boxShadow: '0 1px 3px 0 rgba(0,0,0,0.4), 0 1px 2px -1px rgba(0,0,0,0.3)',
         },
       },
     },
@@ -78,11 +82,38 @@ export default createTheme({
     },
     MuiAppBar: {
       defaultProps: { elevation: 0 },
+      styleOverrides: {
+        root: {
+          backgroundImage: 'none',
+          backgroundColor: '#0f1d30',
+          borderBottom: '1px solid rgba(100,136,175,0.18)',
+        },
+      },
     },
     MuiDivider: {
       styleOverrides: {
-        root: { borderColor: '#e2e8f0' },
+        root: { borderColor: 'rgba(100,136,175,0.15)' },
       },
+    },
+    MuiDrawer: {
+      styleOverrides: {
+        paper: { backgroundImage: 'none' },
+      },
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: { borderColor: 'rgba(100,136,175,0.12)' },
+      },
+    },
+    MuiTableRow: {
+      styleOverrides: {
+        root: {
+          '&:hover': { backgroundColor: 'rgba(100,136,175,0.05)' },
+        },
+      },
+    },
+    MuiTextField: {
+      defaultProps: { variant: 'outlined' },
     },
   },
 })

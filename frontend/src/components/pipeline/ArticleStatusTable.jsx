@@ -45,8 +45,8 @@ function StatusChip({ status }) {
 }
 
 export default function ArticleStatusTable({ articles, triggeringIds, onTrigger, onOpen }) {
-  const cellSx = { py: 1, px: 1.5, fontSize: '0.78rem', borderColor: 'rgba(255,255,255,0.06)' }
-  const headSx = { ...cellSx, color: 'rgba(255,255,255,0.45)', fontWeight: 600, fontSize: '0.7rem', letterSpacing: 0.5 }
+  const cellSx = { py: 1, px: 1.5, fontSize: '0.78rem' }
+  const headSx = { ...cellSx, color: 'text.disabled', fontWeight: 600, fontSize: '0.7rem', letterSpacing: 0.5 }
 
   return (
     <TableContainer>
@@ -77,10 +77,7 @@ export default function ArticleStatusTable({ articles, triggeringIds, onTrigger,
             const hasRun = !!a.latest_run
 
             return (
-              <TableRow
-                key={a.article_id}
-                sx={{ '&:hover': { bgcolor: 'rgba(255,255,255,0.03)' } }}
-              >
+              <TableRow key={a.article_id}>
                 <TableCell sx={cellSx}>
                   <Tooltip title={a.url} placement="top" arrow>
                     <Typography noWrap sx={{ fontSize: '0.78rem', maxWidth: 260, color: 'text.primary' }}>
@@ -109,7 +106,7 @@ export default function ArticleStatusTable({ articles, triggeringIds, onTrigger,
                   <Tooltip title="View article">
                     <span>
                       <IconButton size="small" onClick={() => onOpen(a, 'article')}
-                        sx={{ color: 'rgba(255,255,255,0.5)', '&:hover': { color: '#fff' } }}>
+                        sx={{ color: 'text.secondary', '&:hover': { color: 'text.primary' } }}>
                         <ArticleIcon fontSize="small" />
                       </IconButton>
                     </span>
@@ -119,7 +116,7 @@ export default function ArticleStatusTable({ articles, triggeringIds, onTrigger,
                     <span>
                       <IconButton size="small" disabled={!hasRun}
                         onClick={() => onOpen(a, 'processing')}
-                        sx={{ color: hasRun ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.15)', '&:hover': { color: '#fff' } }}>
+                        sx={{ color: hasRun ? 'text.secondary' : 'text.disabled', '&:hover': { color: 'text.primary' } }}>
                         <TimelineIcon fontSize="small" />
                       </IconButton>
                     </span>
@@ -129,7 +126,7 @@ export default function ArticleStatusTable({ articles, triggeringIds, onTrigger,
                     <span>
                       <IconButton size="small" disabled={!hasResults}
                         onClick={() => onOpen(a, 'results')}
-                        sx={{ color: hasResults ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.15)', '&:hover': { color: '#fff' } }}>
+                        sx={{ color: hasResults ? 'text.secondary' : 'text.disabled', '&:hover': { color: 'text.primary' } }}>
                         <AnalyticsIcon fontSize="small" />
                       </IconButton>
                     </span>
@@ -139,7 +136,7 @@ export default function ArticleStatusTable({ articles, triggeringIds, onTrigger,
                     <span>
                       <IconButton size="small" disabled={!canTrigger}
                         onClick={() => onTrigger(a.article_id)}
-                        sx={{ color: canTrigger ? '#60a5fa' : 'rgba(255,255,255,0.15)', '&:hover': { color: '#93c5fd' } }}>
+                        sx={{ color: canTrigger ? 'primary.light' : 'text.disabled', '&:hover': { color: 'primary.main' } }}>
                         {isTriggering
                           ? <CircularProgress size={14} thickness={5} />
                           : <PlayArrowIcon fontSize="small" />}

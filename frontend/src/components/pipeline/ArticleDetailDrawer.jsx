@@ -134,7 +134,7 @@ function ResultsTab({ articleId }) {
       {data.summary && (
         <Box>
           <Typography variant="overline" color="text.secondary" sx={{ letterSpacing: 1 }}>Summary</Typography>
-          <Box sx={{ mt: 0.5, p: 1.5, borderLeft: '3px solid', borderColor: 'primary.main', bgcolor: 'rgba(255,255,255,0.04)', borderRadius: '0 6px 6px 0' }}>
+          <Box sx={{ mt: 0.5, p: 1.5, borderLeft: '3px solid', borderColor: 'primary.main', bgcolor: 'rgba(59,130,246,0.08)', borderRadius: '0 6px 6px 0' }}>
             <Typography variant="body2" sx={{ lineHeight: 1.7 }}>{data.summary}</Typography>
           </Box>
         </Box>
@@ -247,15 +247,15 @@ export default function ArticleDetailDrawer({ open, article, initialTab, run, on
       PaperProps={{
         sx: {
           width: { xs: '100vw', sm: 520 },
-          bgcolor: '#0f172a',
-          borderLeft: '1px solid rgba(255,255,255,0.08)',
+          bgcolor: 'background.paper',
+          borderLeft: '1px solid rgba(100,136,175,0.18)',
           p: 0,
         },
       }}
     >
       <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
         {/* header */}
-        <Box sx={{ px: 2.5, pt: 2, pb: 1, borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'flex-start', gap: 1 }}>
+        <Box sx={{ px: 2.5, pt: 2, pb: 1, borderBottom: '1px solid rgba(100,136,175,0.15)', display: 'flex', alignItems: 'flex-start', gap: 1 }}>
           <Box sx={{ flexGrow: 1, minWidth: 0 }}>
             <Typography noWrap sx={{ fontWeight: 700, fontSize: '0.9rem' }}>
               {article?.title || article?.url || 'Article'}
@@ -272,7 +272,7 @@ export default function ArticleDetailDrawer({ open, article, initialTab, run, on
           value={tab}
           onChange={(_, v) => setTab(v)}
           sx={{
-            px: 2, borderBottom: '1px solid rgba(255,255,255,0.06)',
+            px: 2, borderBottom: '1px solid rgba(100,136,175,0.15)',
             '& .MuiTab-root': { fontSize: '0.75rem', textTransform: 'none', minHeight: 40, py: 0 },
           }}
         >

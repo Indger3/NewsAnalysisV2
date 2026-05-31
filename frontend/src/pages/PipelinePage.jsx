@@ -144,8 +144,8 @@ export default function PipelinePage() {
   // ---------------------------------------------------------------------------
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh', bgcolor: '#0a0f1e' }}>
-      <AppBar position="static" sx={{ bgcolor: '#0f172a', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh', bgcolor: 'background.default' }}>
+      <AppBar position="static">
         <Toolbar sx={{ gap: 2 }}>
           <Box sx={{
             width: 28, height: 28, borderRadius: 1, bgcolor: 'primary.main',
@@ -154,10 +154,10 @@ export default function PipelinePage() {
             <Typography sx={{ color: '#fff', fontWeight: 900, fontSize: '0.75rem', lineHeight: 1 }}>N</Typography>
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1.5, flexGrow: 1 }}>
-            <Typography sx={{ fontWeight: 800, letterSpacing: -0.3, color: '#fff', fontSize: '1rem' }}>
+            <Typography sx={{ fontWeight: 800, letterSpacing: -0.3, color: 'text.primary', fontSize: '1rem' }}>
               {settings.appName}
             </Typography>
-            <Typography sx={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.35)', fontWeight: 500 }}>
+            <Typography sx={{ fontSize: '0.72rem', color: 'text.disabled', fontWeight: 500 }}>
               Pipeline
             </Typography>
           </Box>
@@ -165,7 +165,7 @@ export default function PipelinePage() {
             <Button
               size="small"
               onClick={() => navigate('/')}
-              sx={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem', textTransform: 'none', '&:hover': { color: '#fff' } }}
+              sx={{ color: 'text.secondary', fontSize: '0.75rem', textTransform: 'none', '&:hover': { color: 'text.primary' } }}
             >
               Ad-hoc Analysis
             </Button>
@@ -174,20 +174,20 @@ export default function PipelinePage() {
             <Button
               size="small"
               onClick={() => navigate('/admin')}
-              sx={{ color: 'rgba(255,255,255,0.5)', fontSize: '0.75rem', textTransform: 'none', '&:hover': { color: '#fff' } }}
+              sx={{ color: 'text.secondary', fontSize: '0.75rem', textTransform: 'none', '&:hover': { color: 'text.primary' } }}
             >
               Admin
             </Button>
           )}
           {user && (
-            <Typography sx={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.45)', mr: 1 }}>
+            <Typography sx={{ fontSize: '0.75rem', color: 'text.disabled', mr: 1 }}>
               {user.email}
             </Typography>
           )}
           <Button
             size="small"
             onClick={logout}
-            sx={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.75rem', textTransform: 'none', '&:hover': { color: '#fff' } }}
+            sx={{ color: 'text.secondary', fontSize: '0.75rem', textTransform: 'none', '&:hover': { color: 'text.primary' } }}
           >
             Sign out
           </Button>
@@ -210,8 +210,8 @@ export default function PipelinePage() {
           </Box>
         ) : (
           <Box sx={{
-            bgcolor: '#0f172a',
-            border: '1px solid rgba(255,255,255,0.06)',
+            bgcolor: 'background.paper',
+            border: '1px solid rgba(100,136,175,0.18)',
             borderRadius: 2,
             overflow: 'hidden',
           }}>
