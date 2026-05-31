@@ -1,5 +1,11 @@
 import os
+from pathlib import Path
+
 import spacy
+from dotenv import load_dotenv
+
+# load .env from project root (one level above backend/)
+load_dotenv(Path(__file__).parent.parent.parent / ".env")
 
 APP_DB_CONN = os.environ.get("APP_DB_CONN")
 

@@ -17,7 +17,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import ErrorIcon from '@mui/icons-material/Error'
-import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutlined'
 import { getArticle, getArticleResults } from '../../api/pipeline.api'
 
 const ENTITY_STYLES = {

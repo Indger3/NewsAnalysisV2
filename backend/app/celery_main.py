@@ -16,9 +16,10 @@ celery_app = Celery(
 )
 
 celery_app.conf.update(
-    # Optional: If you want Celery to create the tables automatically
     database_table_names={
         'task': 'celery_taskmeta',
         'group': 'celery_groupmeta',
     },
 )
+
+celery_app.autodiscover_tasks(['app.tasks'])
