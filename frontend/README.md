@@ -1,16 +1,41 @@
-# React + Vite
+# NewsAnalysisV1 — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React 19 + Vite 8 SPA for the NewsAnalysisV1 platform.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+| Category | Technology |
+|---|---|
+| Framework | React 19 + Vite 8 |
+| Routing | React Router DOM 7 |
+| UI | Material-UI (MUI) v9 |
+| HTTP | Axios with JWT Bearer interceptors |
 
-## React Compiler
+## Pages
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Page | Route | Description |
+|---|---|---|
+| Login | `/login` | Email/password login |
+| Signup | `/signup` | New user registration |
+| Analysis | `/` | Ad-hoc NLP analysis (entities, summary, relations) |
+| Pipeline | `/pipeline` | Article ingestion, pipeline trigger & step-level status monitor |
+| Admin | `/admin` | RBAC console — manage users, roles, and page access |
 
-## Expanding the ESLint configuration
+Route access is controlled by the `pages` array returned on login. Each route requires the matching page `slug` to be present in the user's page list.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Development
+
+```bash
+npm install
+npm run dev       # http://localhost:5173
+npm run build
+npm run preview
+```
+
+Set `VITE_API_BASE_URL` in `.env.local` to point at a non-default backend:
+
+```env
+VITE_API_BASE_URL=http://localhost:8000
+```
+
+See the [root README](../README.md) for full project documentation.
