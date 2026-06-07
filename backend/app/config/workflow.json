@@ -25,6 +25,19 @@
       "config": {
         "confidence_threshold": 0.6
       }
+    },
+
+    {
+
+      "order": 4,
+
+      "name": "taxonomy",
+
+      "task": "pipeline.taxonomy",
+
+      "description": "Article taxonomy classification"
+
     }
+    
   ]
 }

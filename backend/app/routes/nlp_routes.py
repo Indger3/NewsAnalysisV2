@@ -2,11 +2,13 @@ from fastapi import APIRouter, Depends, Request
 from pydantic import BaseModel
 from app import settings
 from app.bl.entity_ops import EntityOps
+from app.bl.taxonomy_ops import TaxonomyOps
 from app.utils.auth import get_current_user
 
 router = APIRouter()
 
 entity_ops = EntityOps(settings.NLP)
+taxonomy_ops = TaxonomyOps(settings.NLP)
 
 
 class TextInput(BaseModel):
@@ -37,3 +39,10 @@ def get_summary(request: Request, body: SummaryInput, _: dict = Depends(get_curr
 @router.post("/relations")
 def get_relations(request: Request, body: RelationsInput, _: dict = Depends(get_current_user)):
     return request.app.state.relation_ops.get_relations(body.text, confidence=body.confidence)
+
+@router.post("/taxonomy")
+def get_taxonomy(
+    body: TextInput,
+    _: dict = Depends(get_current_user)
+):
+    return taxonomy_ops.get_taxonomy(body.text)

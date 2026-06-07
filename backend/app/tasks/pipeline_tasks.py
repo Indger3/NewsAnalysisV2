@@ -245,3 +245,52 @@ def pipeline_relations(self, run_id: int, step_exec_id: int) -> None:
         raise
     finally:
         db.close()
+
+
+# ---------------------------------------------------------------------------
+# Task 4: Taxonomy
+# ---------------------------------------------------------------------------
+
+@celery_app.task(name="pipeline.taxonomy", bind=True)
+def pipeline_taxonomy(self, run_id: int, step_exec_id: int) -> None:
+    db = SessionLocal()
+
+    try:
+        step = _mark_running(db, step_exec_id, self.request.id)
+
+        article = db.get(Articles, step.article_id)
+
+        result = _taxonomy_ops.get_taxonomy(article.body)
+
+        logger.info(
+            f"[pipeline.taxonomy] "
+            f"article={step.article_id} "
+            f"result={result}"
+        )
+
+        # TODO:
+        # Save taxonomy result to DB here
+
+        _mark_completed(db, step_exec_id)
+        _advance_workflow(db, run_id, step.step_order)
+
+        db.commit()
+
+    except Exception as exc:
+        db.rollback()
+        _mark_failed_and_skip_rest(
+            db,
+            run_id,
+            step_exec_id,
+            str(exc)
+        )
+        db.commit()
+
+        logger.exception(
+            f"[pipeline.taxonomy] article={step.article_id} run={run_id} failed"
+        )
+
+        raise
+
+    finally:
+        db.close()

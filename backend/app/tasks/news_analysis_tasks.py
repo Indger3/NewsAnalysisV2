@@ -3,11 +3,14 @@ from app import settings
 from app.bl.entity_ops import EntityOps
 from app.bl.summary_ops import SummaryOps
 from app.bl.relation_ops import RelationOps
+from app.bl.taxonomy_ops import TaxonomyOps
+
 
 # initialized once per worker process — not per task call
 _entity_ops = EntityOps(settings.NLP)
 _summary_ops = SummaryOps(settings.NLP)
 _relation_ops = RelationOps(settings.NLP)
+_taxonomy_ops = TaxonomyOps(settings.NLP)
 
 
 @celery_app.task(name="news_analysis.get_entities")
@@ -23,3 +26,9 @@ def summarize(text: str, n: int | None = None) -> dict:
 @celery_app.task(name="news_analysis.get_relations")
 def get_relations(text: str, confidence: float = 0.6) -> dict:
     return _relation_ops.get_relations(text, confidence=confidence)
+
+@celery_app.task(name="news_analysis.get_taxonomy")
+
+def get_taxonomy(text: str) -> dict:
+
+    return _taxonomy_ops.get_taxonomy(text)

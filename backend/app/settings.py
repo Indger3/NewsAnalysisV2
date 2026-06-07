@@ -14,3 +14,4 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.environ.get("ACCESS_TOKEN_EXPIRE_MINUTES", "480"))
 
 NLP = spacy.load("app/static/improved_modelv2")
+TAX = "app/static/taxonomy_model/taxonomy_model_v2.pkl"
