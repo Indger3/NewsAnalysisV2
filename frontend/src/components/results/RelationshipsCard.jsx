@@ -240,7 +240,7 @@
 //   )
 // }
 
-
+import dagre from 'dagre'
 import { Typography, Skeleton, Alert, Stack, Chip } from '@mui/material'
 import { useRef, useEffect } from 'react'
 import SectionCard from './SectionCard'
@@ -265,11 +265,11 @@ const graphData = data?.graph
 
         links: data.graph.edges.map(edge => ({
 
-          source: edge.from,
+          source: edge.from.trim(),
 
-          target: edge.to,
+          target: edge.to.trim(),
 
-          label: edge.label
+          label: edge.label.trim()
 
         }))
 
@@ -277,54 +277,100 @@ const graphData = data?.graph
 
     : null
 
+if (graphData) {
 
+  console.log("NODES", graphData.nodes)
+
+  console.log("LINKS", graphData.links)
+
+}
+// const nodes = []
+
+// const edges = []
+
+// const nodeMap = new Map()
+
+// let currentX = 0
+
+// let currentY = 0
+
+// graphData?.nodes?.forEach((node, index) => {
+
+//   nodeMap.set(node.id, true)
+
+//   nodes.push({
+
+//     id: node.id,
+
+//     data: {
+
+//       label: node.id
+
+//     },
+
+//     position: {
+
+//       x: currentX,
+
+//       y: currentY
+
+//     }
+
+//   })
+
+//   currentX += 250
+
+//   if (currentX > 1000) {
+
+//     currentX = 0
+
+//     currentY += 150
+
+//   }
+
+// })
+//commentout to remove dagre
 const nodes = []
 
 const edges = []
 
-const nodeMap = new Map()
+const dagreGraph = new dagre.graphlib.Graph()
 
-let currentX = 0
+dagreGraph.setDefaultEdgeLabel(() => ({}))
 
-let currentY = 0
-
-graphData?.nodes?.forEach((node, index) => {
-
-  nodeMap.set(node.id, true)
-
-  nodes.push({
-
-    id: node.id,
-
-    data: {
-
-      label: node.id
-
-    },
-
-    position: {
-
-      x: currentX,
-
-      y: currentY
-
-    }
-
-  })
-
-  currentX += 250
-
-  if (currentX > 1000) {
-
-    currentX = 0
-
-    currentY += 150
-
-  }
-
+dagreGraph.setGraph({
+  rankdir: 'LR',
+  nodesep: 80,
+  ranksep: 180
 })
 
+graphData?.nodes?.forEach((node) => {
+
+  dagreGraph.setNode(node.id, {
+    width: 180,
+    height: 50
+  })
+
+})
+//-----------------
 graphData?.links?.forEach((link, index) => {
+  console.log(link)
+  console.log(
+
+  "EDGE:",
+
+  link.source,
+
+  "--",
+
+  link.label,
+
+  "-->",
+
+  link.target
+
+)
+dagreGraph.setEdge(link.source, link.target) //commentout to remove dagre
 
   edges.push({
 
@@ -349,6 +395,35 @@ graphData?.links?.forEach((link, index) => {
   })
 
 })
+//commentout to remove dagre
+dagre.layout(dagreGraph)
+
+graphData?.nodes?.forEach((node) => {
+
+  const pos = dagreGraph.node(node.id)
+
+  nodes.push({
+
+    id: node.id,
+
+    data: {
+      label: node.id
+    },
+
+    position: {
+      x: pos.x,
+      y: pos.y
+    },
+
+    style: {
+      width: 180,
+      borderRadius: '8px'
+    }
+
+  })
+
+})
+//----------------
   return (
     <SectionCard title="Relationships" accent="#d97706">
       {loading && (
