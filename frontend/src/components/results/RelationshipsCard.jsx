@@ -250,7 +250,8 @@ import ReactFlow, {
 
   Controls,
 
-  MiniMap
+  MiniMap,
+  MarkerType
 
 } from 'reactflow'
 
@@ -333,9 +334,17 @@ graphData?.links?.forEach((link, index) => {
 
     target: link.target,
 
+    type: 'smoothstep',
+
     label: link.label,
 
-    animated: true
+    animated: true,
+
+    markerEnd: {
+
+    type: MarkerType.ArrowClosed
+
+  }
 
   })
 

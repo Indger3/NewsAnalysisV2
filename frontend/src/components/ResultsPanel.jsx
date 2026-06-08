@@ -4,6 +4,7 @@ import MetadataCard from './results/MetadataCard'
 import TaxonomyCard from './results/TaxonomyCard'
 import EntitiesCard from './results/EntitiesCard'
 import RelationshipsCard from './results/RelationshipsCard'
+import NormalizationCard from './results/NormalizationCard'
 
 export default function ResultsPanel({ loading, results, errors }) {
   return (
@@ -56,6 +57,12 @@ export default function ResultsPanel({ loading, results, errors }) {
             loading={loading.relationships}
             data={results.relationships}
             error={errors.relationships}
+          />
+
+          <NormalizationCard
+            loading={loading.normalization}
+            data={results.normalization}
+            error={errors.normalization}
           />
         </Stack>
       </Box>

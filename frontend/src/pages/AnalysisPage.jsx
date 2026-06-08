@@ -11,15 +11,16 @@ import {
   analyzeMetadata,
   analyzeTaxonomy,
   analyzeRelationships,
+  analyzeNormalization,
 } from '../api/nlp.api'
 
 const DEFAULT_NLP_SETTINGS = { model: 'ai4bharat/IndicBERTv2-MLM-only', confidence: 0.6 }
 
 const emptyState = () => ({
-  entities: null, summary: null, metadata: null, taxonomy: null, relationships: null,
+  entities: null, summary: null, metadata: null, taxonomy: null, relationships: null,normalization: null,
 })
 const falseState = () => ({
-  entities: false, summary: false, metadata: false, taxonomy: false, relationships: false,
+  entities: false, summary: false, metadata: false, taxonomy: false, relationships: false,normalization: false,
 })
 
 export default function AnalysisPage() {
@@ -70,6 +71,7 @@ export default function AnalysisPage() {
       confidence: nlpSettings.confidence,
       model: nlpSettings.model,
     })
+    callEndpoint('normalization', analyzeNormalization, articleText)
   }
 
   return (

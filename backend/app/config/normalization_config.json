@@ -1,0 +1,165 @@
+{
+  "titles": [
+    "mr", "mrs", "miss", "ms", "mx",
+    "sir", "madam", "maam", "lord", "lady",
+    "dr", "prof", "professor",
+    "president", "prime minister", "pm",
+    "minister", "chief minister", "cm",
+    "justice", "judge", "advocate",
+    "captain", "major", "colonel", "general",
+
+    "shri", "sri", "shriman",
+    "smt", "shrimati",
+    "kumari",
+    "pandit", "maulana", "ustad",
+    "guru", "swami", "maharaj",
+    "janab", "hazrat",
+    "sardar", "sardarni",
+
+    "thiru", "thirumathi",
+    "selvan", "selvi",
+
+    "don", "dona",
+    "senor", "senora", "senorita",
+    "monsieur", "madame", "mademoiselle",
+    "herr", "frau",
+    "signore", "signora", "signorina",
+
+    "agha", "khanom",
+    "sayyid", "sayyida", "sheikh",
+    "bey", "hanim",
+
+    "sensei", "teacher"
+  ],
+
+  "strict_suffixes": [
+    "ji", "jee",
+    "garu",
+    "avaru",
+    "bhai", "ben",
+    "saab", "sahab", "sahib", "sahiba",
+    "moshai",
+    "appa", "anna", "ayya",
+    "ettan", "chettan"
+  ],
+
+  "ambiguous_suffixes": [
+    "singh", "kaur",
+    "kumar", "kumari",
+    "lal",
+    "devi", "debi", "dei",
+    "bai",
+    "rao", "raju",
+    "reddy",
+    "patel",
+    "shetty",
+    "gowda",
+    "nayak", "naik",
+    "yadav",
+    "sharma",
+    "varma", "verma",
+    "iyer", "iyengar",
+    "pillai",
+    "nair",
+    "menon",
+    "gupta",
+    "agarwal",
+    "jain",
+    "mehta",
+    "deshmukh",
+    "kulkarni",
+    "patil",
+    "joshi",
+    "khan",
+    "begum", "bibi",
+    "das", "dass"
+  ],
+
+  "org_suffixes": [
+    "ltd", "limited",
+    "pvt", "pvt ltd", "private", "private limited",
+    "inc", "incorporated",
+    "corp", "corporation",
+    "co", "company",
+    "llc", "llp",
+    "plc",
+
+    "group",
+    "holdings",
+    "enterprises",
+    "industries",
+    "solutions",
+    "technologies",
+    "systems",
+    "services",
+    "international",
+    "global",
+
+    "bank",
+    "trust",
+    "foundation",
+    "association",
+    "committee",
+    "council",
+    "board",
+    "authority",
+    "commission",
+    "department",
+    "ministry",
+    "bureau",
+    "agency",
+
+    "university",
+    "college",
+    "institute",
+    "school",
+    "academy",
+
+    "party",
+    "sena",
+    "dal",
+    "front",
+    "congress"
+  ],
+
+  "abbreviations": {
+  "general": {
+    
+
+    "govt": "government",
+    "gov": "government",
+    "dept": "department",
+    "min": "ministry",
+
+    "no": "number",
+    "est": "established",
+    "vs": "versus"
+  },
+
+  "organization": {
+    "un": "united nations",
+    "who": "world health organization",
+    "imf": "international monetary fund",
+    "wb": "world bank",
+    "wto": "world trade organization",
+    "nato": "north atlantic treaty organization",
+
+    "bjp": "bharatiya janata party",
+    "inc": "indian national congress",
+    "cong": "indian national congress",
+    "aap": "aam aadmi party",
+    "tmc": "trinamool congress",
+    "ncp": "nationalist congress party",
+    "rss": "rashtriya swayamsevak sangh"
+  },
+
+  "legal": {
+    
+    "ltd": "limited",
+    "pvt": "private",
+    "co": "company",
+    "corp": "corporation",
+    "llc": "limited liability company"
+  }
+}
+}

@@ -4,11 +4,13 @@ from app import settings
 from app.bl.entity_ops import EntityOps
 from app.bl.taxonomy_ops import TaxonomyOps
 from app.utils.auth import get_current_user
+from app.bl.normalization_ops import NormalizationOps
 
 router = APIRouter()
 
 entity_ops = EntityOps(settings.NLP)
 taxonomy_ops = TaxonomyOps(settings.NLP)
+normalization_ops = NormalizationOps()
 
 
 class TextInput(BaseModel):
@@ -24,6 +26,8 @@ class RelationsInput(BaseModel):
     text: str
     confidence: float = 0.6
 
+class NormalizationInput(BaseModel):
+    text: str
 
 @router.post("/entities")
 def get_entities(body: TextInput, _: dict = Depends(get_current_user)):
@@ -46,3 +50,28 @@ def get_taxonomy(
     _: dict = Depends(get_current_user)
 ):
     return taxonomy_ops.get_taxonomy(body.text)
+
+@router.post("/normalize")
+def normalize_entities(
+    request: Request,
+    body: NormalizationInput,
+    _: dict = Depends(get_current_user)
+):
+
+    entities = entity_ops.get_entities(body.text)
+
+    relation_result = request.app.state.relation_ops.get_relations(
+        body.text
+    )
+
+    return {
+        "normalized_entities":
+            normalization_ops.normalize_entities(
+                entities=entities,
+                text=body.text,
+                relations=relation_result.get(
+                    "relationships",
+                    []
+                )
+            )
+    }
