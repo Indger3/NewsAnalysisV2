@@ -8,3 +8,18 @@ export const analyzeMetadata      = analyze('/v1/metadata')
 export const analyzeTaxonomy      = analyze('/v1/taxonomy')
 export const analyzeRelationships = analyze('/v1/relations')
 export const analyzeNormalization = analyze('/v1/normalize')
+export const analyzeBatch = (file) => {
+  const formData = new FormData()
+
+  formData.append('file', file)
+
+  return post(
+    '/v1/batch-analysis',
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    }
+  )
+}

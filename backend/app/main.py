@@ -6,24 +6,62 @@ from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
 
 from app import settings
+#from app.bl.local_relation_ops import LocalRelationOps
 from app.bl.relation_ops import RelationOps
 from app.bl.summary_ops import SummaryOps
 from app.routes import admin_routes, auth_routes, ingest_routes, nlp_routes, pipeline_routes
 from app.utils.app_logger import setup_logging
+from app.bl.entity_ops import EntityOps
+from app.bl.taxonomy_ops import TaxonomyOps
+from app.bl.normalization_ops import NormalizationOps
+from app.bl.batch_analysis_ops import BatchAnalysisOps
 
 setup_logging()
 
 
+# @asynccontextmanager
+# async def lifespan(app: FastAPI):
+#     logger.debug(settings.NLP.meta)
+#     logger.info("spaCy model loaded")
+#     app.state.summary_ops = SummaryOps(settings.NLP)
+#     logger.info("SummaryOps loaded")
+#     app.state.relation_ops = RelationOps(settings.NLP)
+#     logger.info("RelationOps loaded")
+#     yield
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+
     logger.debug(settings.NLP.meta)
     logger.info("spaCy model loaded")
+
+    app.state.entity_ops = EntityOps(settings.NLP)
+    logger.info("EntityOps loaded")
+
     app.state.summary_ops = SummaryOps(settings.NLP)
     logger.info("SummaryOps loaded")
-    app.state.relation_ops = RelationOps(settings.NLP)
-    logger.info("RelationOps loaded")
-    yield
 
+    app.state.relation_ops = RelationOps(settings.NLP)
+    #app.state.local_relation_ops = LocalRelationOps()
+    logger.info("RelationOps loaded")
+
+    app.state.taxonomy_ops = TaxonomyOps(settings.NLP)
+    logger.info("TaxonomyOps loaded")
+
+    app.state.normalization_ops = NormalizationOps()
+    logger.info("NormalizationOps loaded")
+
+    app.state.batch_analysis_ops = BatchAnalysisOps(
+        entity_ops=app.state.entity_ops,
+        relation_ops=app.state.relation_ops,
+        #local_relation_ops=app.state.local_relation_ops,
+        taxonomy_ops=app.state.taxonomy_ops,
+        normalization_ops=app.state.normalization_ops,
+        summary_ops=app.state.summary_ops
+    )
+
+    logger.info("BatchAnalysisOps loaded")
+
+    yield
 
 app = FastAPI(lifespan=lifespan)
 

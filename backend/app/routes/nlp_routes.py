@@ -1,10 +1,26 @@
 from fastapi import APIRouter, Depends, Request
+import json
 from pydantic import BaseModel
 from app import settings
 from app.bl.entity_ops import EntityOps
 from app.bl.taxonomy_ops import TaxonomyOps
 from app.utils.auth import get_current_user
 from app.bl.normalization_ops import NormalizationOps
+from fastapi import (
+
+    APIRouter,
+
+    Depends,
+
+    Request,
+
+    UploadFile,
+
+    File,
+
+    HTTPException
+
+)
 
 router = APIRouter()
 
@@ -28,6 +44,10 @@ class RelationsInput(BaseModel):
 
 class NormalizationInput(BaseModel):
     text: str
+
+class BatchAnalysisRequest(BaseModel):
+    input_file: str
+    output_file: str
 
 @router.post("/entities")
 def get_entities(body: TextInput, _: dict = Depends(get_current_user)):
@@ -75,3 +95,42 @@ def normalize_entities(
                 )
             )
     }
+
+@router.post("/batch-analysis")
+async def batch_analysis(
+    request: Request,
+    file: UploadFile = File(...),
+    _: dict = Depends(get_current_user)
+):
+    try:
+
+        contents = await file.read()
+
+        articles = json.loads(
+            contents.decode("utf-8")
+        )
+
+        if not isinstance(articles, list):
+
+            raise HTTPException(
+                status_code=400,
+                detail="JSON file must contain a list of articles"
+            )
+
+        results = (
+            request.app.state.batch_analysis_ops.process_batch(
+                articles
+            )
+        )
+
+        return {
+            "total_articles": len(results),
+            "results": results
+        }
+
+    except json.JSONDecodeError:
+
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid JSON file"
+        )

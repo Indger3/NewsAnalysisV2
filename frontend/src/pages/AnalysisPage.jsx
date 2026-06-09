@@ -1,4 +1,5 @@
 import { useState } from 'react'
+
 import { useNavigate } from 'react-router-dom'
 import { AppBar, Toolbar, Typography, Box, Button } from '@mui/material'
 import ArticlePanel from '../components/ArticlePanel'
@@ -12,6 +13,7 @@ import {
   analyzeTaxonomy,
   analyzeRelationships,
   analyzeNormalization,
+  analyzeBatch,
 } from '../api/nlp.api'
 
 const DEFAULT_NLP_SETTINGS = { model: 'ai4bharat/IndicBERTv2-MLM-only', confidence: 0.6 }
@@ -23,7 +25,11 @@ const falseState = () => ({
   entities: false, summary: false, metadata: false, taxonomy: false, relationships: false,normalization: false,
 })
 
+
+
 export default function AnalysisPage() {
+  const [batchFile, setBatchFile] = useState(null)
+  const [isBatchMode, setIsBatchMode] = useState(false)
   const { user, logout } = useAuth()
   const navigate = useNavigate()
   const [articleText, setArticleText] = useState('')
@@ -41,10 +47,10 @@ export default function AnalysisPage() {
 
   const isAnalyzing = Object.values(loading).some(Boolean)
 
-  function handleSettingsChange(next) {
-    setNlpSettings(next)
-    localStorage.setItem('analysis_settings', JSON.stringify(next))
-  }
+  // function handleSettingsChange(next) {
+  //   setNlpSettings(next)
+  //   localStorage.setItem('analysis_settings', JSON.stringify(next))
+  // }
 
   async function callEndpoint(key, apiFn, text, options = {}) {
     setLoading((prev) => ({ ...prev, [key]: true }))
@@ -59,7 +65,30 @@ export default function AnalysisPage() {
       setLoading((prev) => ({ ...prev, [key]: false }))
     }
   }
+async function handleBatchAnalyze() {
+  if (!batchFile) return
 
+  try {
+    const res = await analyzeBatch(batchFile)
+
+    const blob = new Blob(
+      [JSON.stringify(res.data, null, 2)],
+      { type: 'application/json' }
+    )
+
+    const url = window.URL.createObjectURL(blob)
+
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'batch_analysis_results.json'
+    a.click()
+
+    window.URL.revokeObjectURL(url)
+
+  } catch (err) {
+    console.error(err)
+  }
+}
   function handleAnalyze() {
     setResults(emptyState())
     setErrors(emptyState())
@@ -128,14 +157,35 @@ export default function AnalysisPage() {
       </AppBar>
 
       <Box sx={{ display: 'flex', flexGrow: 1, overflow: 'hidden' }}>
-        <ArticlePanel
+        {/* <ArticlePanel
           text={articleText}
           onChange={setArticleText}
           onSubmit={handleAnalyze}
           isAnalyzing={isAnalyzing}
           settings={nlpSettings}
           onSettingsChange={handleSettingsChange}
-        />
+        /> */}
+        <ArticlePanel
+
+  text={articleText}
+
+  onChange={setArticleText}
+
+  onSubmit={handleAnalyze}
+
+  isAnalyzing={isAnalyzing}
+
+  // settings={nlpSettings}
+
+  // onSettingsChange={handleSettingsChange}
+
+  batchFile={batchFile}
+
+  onBatchFileSelect={setBatchFile}
+
+  onBatchAnalyze={handleBatchAnalyze}
+
+/>
         <ResultsPanel loading={loading} results={results} errors={errors} />
       </Box>
     </Box>

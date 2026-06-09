@@ -1,8 +1,18 @@
 import { Box, TextField, Button, Typography, CircularProgress } from '@mui/material'
 import { wordCount } from '../utils/text'
-import AnalysisSettings from './AnalysisSettings'
+//import AnalysisSettings from './AnalysisSettings'
 
-export default function ArticlePanel({ text, onChange, onSubmit, isAnalyzing, settings, onSettingsChange }) {
+// export default function ArticlePanel({ text, onChange, onSubmit, isAnalyzing, settings, onSettingsChange }) 
+export default function ArticlePanel({
+  text,
+  onChange,
+  onSubmit,
+  isAnalyzing,
+
+  batchFile,
+  onBatchFileSelect,
+  onBatchAnalyze
+}){
   const words = wordCount(text)
 
   return (
@@ -72,8 +82,62 @@ export default function ArticlePanel({ text, onChange, onSubmit, isAnalyzing, se
         />
       </Box>
 
-      <AnalysisSettings settings={settings} onChange={onSettingsChange} />
+      {/* <AnalysisSettings settings={settings} onChange={onSettingsChange} /> */}
+<Box
+  sx={{
+    p: 2,
+    borderTop: '1px solid',
+    borderBottom: '1px solid',
+    borderColor: 'divider',
+  }}
+>
+  <Typography
+    sx={{
+      fontSize: '0.75rem',
+      fontWeight: 700,
+      mb: 1,
+    }}
+  >
+    Batch Analysis
+  </Typography>
 
+  <Button
+    component="label"
+    variant="outlined"
+    fullWidth
+  >
+    Upload JSON File
+
+    <input
+      hidden
+      type="file"
+      accept=".json"
+      onChange={(e) => onBatchFileSelect(e.target.files?.[0])}
+    />
+  </Button>
+
+  {batchFile && (
+    <Typography
+      variant="caption"
+      sx={{
+        display: 'block',
+        mt: 1,
+      }}
+    >
+      {batchFile.name}
+    </Typography>
+  )}
+
+  <Button
+    variant="contained"
+    fullWidth
+    sx={{ mt: 2 }}
+    disabled={!batchFile}
+    onClick={onBatchAnalyze}
+  >
+    Analyze Batch File
+  </Button>
+</Box>
       <Box sx={{
         px: 3,
         py: 2.5,
