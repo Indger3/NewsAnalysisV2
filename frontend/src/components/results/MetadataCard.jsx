@@ -27,11 +27,47 @@ export default function MetadataCard({ loading, data, error }) {
       )}
       {!loading && data && (
         <Stack divider={<Divider flexItem />}>
-          {data.title     && <MetaRow label="Title"     value={data.title} />}
-          {data.author    && <MetaRow label="Author"    value={data.author} />}
-          {data.date      && <MetaRow label="Date"      value={data.date} />}
-          {data.source    && <MetaRow label="Source"    value={data.source} />}
-          {data.sentiment && <MetaRow label="Sentiment" value={data.sentiment} />}
+          {data.author && (
+  <MetaRow
+    label="Author"
+    value={data.author}
+  />
+)}
+
+{data.reporter && (
+  <MetaRow
+    label="Reporter"
+    value={data.reporter}
+  />
+)}
+
+{data.location && (
+  <MetaRow
+    label="Location"
+    value={data.location}
+  />
+)}
+
+{data.news_agency && (
+  <MetaRow
+    label="News Agency"
+    value={data.news_agency}
+  />
+)}
+
+{data.publisher && (
+  <MetaRow
+    label="Publisher"
+    value={data.publisher}
+  />
+)}
+
+{data.publication_date && (
+  <MetaRow
+    label="Publication Date"
+    value={data.publication_date}
+  />
+)}
         </Stack>
       )}
       {!loading && !error && !data && (

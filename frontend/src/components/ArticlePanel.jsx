@@ -112,11 +112,14 @@ export default function ArticlePanel({
       hidden
       type="file"
       accept=".json"
-      onChange={(e) => onBatchFileSelect(e.target.files?.[0])}
+      onChange={(e) => {
+  onBatchFileSelect(e.target.files?.[0] || null)
+  e.target.value = ''
+}}
     />
   </Button>
 
-  {batchFile && (
+  {/* {batchFile && (
     <Typography
       variant="caption"
       sx={{
@@ -126,7 +129,31 @@ export default function ArticlePanel({
     >
       {batchFile.name}
     </Typography>
-  )}
+  )} */}
+  {batchFile && (
+  <Box sx={{ mt: 1 }}>
+    <Typography
+      variant="caption"
+      sx={{
+        display: 'block',
+        mb: 1,
+      }}
+    >
+      {batchFile.name}
+    </Typography>
+
+    <Button
+      variant="outlined"
+      color="error"
+      size="small"
+      fullWidth
+      onClick={() => onBatchFileSelect(null)}
+    >
+      Remove File
+    </Button>
+  </Box>
+)}
+
 
   <Button
     variant="contained"

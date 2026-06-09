@@ -7,6 +7,7 @@ from loguru import logger
 
 from app import settings
 #from app.bl.local_relation_ops import LocalRelationOps
+from app.bl.metadata_ops import MetadataOps
 from app.bl.relation_ops import RelationOps
 from app.bl.summary_ops import SummaryOps
 from app.routes import admin_routes, auth_routes, ingest_routes, nlp_routes, pipeline_routes
@@ -36,7 +37,7 @@ async def lifespan(app: FastAPI):
 
     app.state.entity_ops = EntityOps(settings.NLP)
     logger.info("EntityOps loaded")
-
+    app.state.metadata_ops = MetadataOps(settings.NLP)
     app.state.summary_ops = SummaryOps(settings.NLP)
     logger.info("SummaryOps loaded")
 

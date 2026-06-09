@@ -3,6 +3,7 @@ import json
 from pydantic import BaseModel
 from app import settings
 from app.bl.entity_ops import EntityOps
+from app.bl.metadata_ops import MetadataOps
 from app.bl.taxonomy_ops import TaxonomyOps
 from app.utils.auth import get_current_user
 from app.bl.normalization_ops import NormalizationOps
@@ -27,6 +28,7 @@ router = APIRouter()
 entity_ops = EntityOps(settings.NLP)
 taxonomy_ops = TaxonomyOps(settings.NLP)
 normalization_ops = NormalizationOps()
+metadata_ops = MetadataOps(settings.NLP)
 
 
 class TextInput(BaseModel):
@@ -134,3 +136,10 @@ async def batch_analysis(
             status_code=400,
             detail="Invalid JSON file"
         )
+    
+@router.post("/metadata")
+def get_metadata(
+    body: TextInput,
+    _: dict = Depends(get_current_user)
+):
+    return metadata_ops.extract(body.text)
