@@ -34,60 +34,116 @@ AI-powered news article analysis pipeline. Ingest articles, trigger an async NLP
 
 ```
 NewsAnalysisV1/
+├── .env
+├── .git/
+├── .gitignore
+├── .venv/
+├── .vscode/
+├── README.md
 ├── backend/
-│   ├── app/
-│   │   ├── main.py                          # FastAPI app entry point
-│   │   ├── settings.py                      # Config & environment variables
-│   │   ├── celery_main.py                   # Celery worker config
-│   │   ├── config/
-│   │   │   └── workflow.json                # Pipeline workflow definition
-│   │   ├── routes/
-│   │   │   ├── auth_routes.py               # Signup & login endpoints
-│   │   │   ├── nlp_routes.py                # NLP endpoints (entities, summarize, relations)
-│   │   │   ├── ingest_routes.py             # Article ingestion endpoint
-│   │   │   ├── pipeline_routes.py           # Pipeline trigger, status & results endpoints
-│   │   │   └── admin_routes.py              # RBAC admin endpoints (users, roles, pages)
-│   │   ├── bl/
-│   │   │   ├── entity_ops.py                # NER business logic
-│   │   │   ├── summary_ops.py               # Summarization business logic
-│   │   │   └── relation_ops.py              # Relation extraction business logic
-│   │   ├── dal/
-│   │   │   ├── app_db.py                    # SQLAlchemy session factory
-│   │   │   ├── db_models.py                 # ORM models (articles, users, roles, pages, pipeline tables)
-│   │   │   ├── user_dal.py                  # User read/write operations
-│   │   │   └── admin_dal.py                 # RBAC admin read/write operations
-│   │   ├── utils/
-│   │   │   ├── auth.py                      # JWT creation & validation, RBAC guards
-│   │   │   └── app_logger.py                # Loguru setup
-│   │   └── tasks/
-│   │       ├── news_analysis_tasks.py       # Celery NLP tasks (entity, summary, relation)
-│   │       └── pipeline_tasks.py            # Celery pipeline orchestration tasks
-│   └── requirements.txt
+│   ├── .gitignore
+│   ├── requirements.txt
+│   └── app/
+│       ├── celery_main.py                   # Celery worker config
+│       ├── main.py                          # FastAPI app entry point
+│       ├── settings.py                      # Config & environment variables
+│       ├── bl/
+│       │   ├── batch_analysis_ops.py        # Batch analysis orchestration
+│       │   ├── entity_ops.py                # NER business logic
+│       │   ├── metadata_ops.py              # Metadata extraction/ops
+│       │   ├── normalization_ops.py         # Normalization helpers
+│       │   ├── relation_ops.py              # Relation extraction logic
+│       │   ├── summary_ops.py               # Summarization logic
+│       │   └── taxonomy_ops.py              # Taxonomy classification ops
+│       ├── config/
+│       │   ├── normalization_config.json    # Normalization rules/config
+│       │   ├── relations.yaml               # Relation definitions
+│       │   └── workflow.json                # Pipeline/workflow definition
+│       ├── dal/
+│       │   ├── admin_dal.py                 # RBAC admin DB access
+│       │   ├── app_db.py                    # SQLAlchemy session / DB connection
+│       │   ├── db_models.py                 # ORM models
+│       │   └── user_dal.py                  # User DB access
+│       ├── routes/
+│       │   ├── admin_routes.py              # Admin API endpoints
+│       │   ├── auth_routes.py               # Auth endpoints (signup/login)
+│       │   ├── ingest_routes.py             # Article ingest endpoints
+│       │   ├── nlp_routes.py                # NLP endpoints (entities/summarize/relations)
+│       │   └── pipeline_routes.py           # Pipeline trigger/status/results endpoints
+│       ├── static/
+│       │   ├── improved_modelv2/
+│       │   │   ├── config.cfg               # Model config
+│       │   │   ├── meta.json                # Model metadata
+│       │   │   ├── tokenizer                # Tokenizer resources
+│       │   │   ├── ner/
+│       │   │   │   ├── cfg                  # NER config
+│       │   │   │   ├── model                # NER model files
+│       │   │   │   └── moves                # NER state/moves
+│       │   │   └── vocab/
+│       │   │       ├── key2row
+│       │   │       ├── lookups.bin
+│       │   │       ├── strings.json
+│       │   │       ├── vectors
+│       │   │       └── vectors.cfg
+│       │   └── taxonomy_model/
+│       │       ├── taxonomy_model_v2.pkl    # Serialized taxonomy model
+│       │       └── taxonomy_model_v2.py     # Taxonomy model wrapper
+│       ├── tasks/
+│       │   ├── news_analysis_tasks.py       # Celery NLP tasks
+│       │   └── pipeline_tasks.py            # Celery pipeline orchestration tasks
+│       └── utils/
+│           ├── app_logger.py                # Loguru setup
+│           └── auth.py                      # JWT helpers & RBAC guards
 └── frontend/
-    ├── src/
-    │   ├── pages/
-    │   │   ├── LoginPage.jsx                # Email/password login form
-    │   │   ├── SignupPage.jsx               # User registration form
-    │   │   ├── AnalysisPage.jsx             # Ad-hoc NLP analysis interface
-    │   │   ├── PipelinePage.jsx             # Article pipeline monitor
-    │   │   └── AdminPage.jsx                # RBAC admin console
-    │   ├── components/
-    │   │   ├── ArticlePanel.jsx             # Article text input + analyze button
-    │   │   ├── AnalysisSettings.jsx         # Analysis configuration controls
-    │   │   ├── ResultsPanel.jsx             # Results container
-    │   │   ├── results/                     # EntitiesCard, SummaryCard, RelationshipsCard, etc.
-    │   │   └── pipeline/
-    │   │       ├── ArticleStatusTable.jsx   # Table of articles with pipeline status
-    │   │       └── ArticleDetailDrawer.jsx  # Article detail & results side drawer
-    │   ├── contexts/
-    │   │   └── AuthContext.jsx              # Global auth state, token & user info
-    │   ├── router/
-    │   │   └── index.jsx                    # Route definitions with RBAC guards
-    │   └── api/
-    │       ├── rest_client.js               # Axios instance with auth interceptors
-    │       ├── auth.api.js                  # Login / signup API calls
-    │       └── nlp.api.js                   # NLP analysis API calls
-    └── package.json
+    ├── .gitignore
+    ├── README.md
+    ├── eslint.config.js
+    ├── index.html
+    ├── node_modules/
+    ├── package-lock.json
+    ├── package.json
+    ├── public/
+    ├── vite.config.js
+    └── src/
+        ├── App.css
+        ├── App.jsx                          # Root React component
+        ├── index.css
+        ├── main.jsx                         # React app entry
+        ├── settings.js
+        ├── theme.js
+        ├── api/
+        │   ├── admin.api.js                 # Admin API client
+        │   ├── auth.api.js                  # Auth API client
+        │   ├── nlp.api.js                   # NLP API client
+        │   └── rest_client.js               # Axios instance with auth interceptors
+        ├── assets/
+        ├── components/
+        │   ├── AnalysisSettings.jsx         # Analysis configuration controls
+        │   ├── ArticlePanel.jsx             # Article input + analyze button
+        │   ├── ResultsPanel.jsx             # Results container / cards layout
+        │   ├── pipeline/
+        │   │   ├── ArticleDetailDrawer.jsx
+        │   │   └── ArticleStatusTable.jsx
+        │   └── results/
+        │       ├── EntitiesCard.jsx
+        │       ├── MetadataCard.jsx
+        │       ├── NormalizationCard.jsx
+        │       ├── RelationshipsCard.jsx
+        │       ├── SectionCard.jsx
+        │       ├── SummaryCard.jsx
+        │       └── TaxonomyCard.jsx
+        ├── contexts/
+        │   └── AuthContext.jsx               # Global auth state & token handling
+        ├── pages/
+        │   ├── AdminPage.jsx
+        │   ├── AnalysisPage.jsx
+        │   ├── LoginPage.jsx
+        │   ├── PipelinePage.jsx
+        │   └── SignupPage.jsx
+        ├── router/
+        │   └── index.jsx                     # Routes with RBAC guards
+        └── utils/
+            └── text.js                       # Text helper utilities
 ```
 
 ---
