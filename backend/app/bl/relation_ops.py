@@ -529,7 +529,7 @@ class RelationOps:
             self._sent_nlp = spacy.blank("en")
             self._sent_nlp.add_pipe("sentencizer")
 
-        self.gemini_client = genai.Client(api_key="AIzaSyAHrTfgh2K37AT8tx1x8w1GbH8f-vzQy1c")
+        self.gemini_client = genai.Client(api_key="#")
 
     # ------------------------------------------------------------------
     # Public API
