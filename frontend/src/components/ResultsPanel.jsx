@@ -1,4 +1,6 @@
-import { Box, Typography, Stack } from '@mui/material'
+import { Box, Typography, Stack, Button } from '@mui/material'
+import DownloadIcon from '@mui/icons-material/Download'
+import { downloadAnalysis } from '../utils/download'
 import SummaryCard from './results/SummaryCard'
 import MetadataCard from './results/MetadataCard'
 import TaxonomyCard from './results/TaxonomyCard'
@@ -6,7 +8,18 @@ import EntitiesCard from './results/EntitiesCard'
 import RelationshipsCard from './results/RelationshipsCard'
 import NormalizationCard from './results/NormalizationCard'
 
-export default function ResultsPanel({ loading, results, errors }) {
+
+export default function ResultsPanel({ loading, results, errors ,articleText,}) {
+  const canDownload =
+  !Object.values(loading).some(Boolean) &&
+  results.summary &&
+  results.metadata &&
+  results.taxonomy &&
+  results.entities &&
+  results.relationships &&
+  results.normalization;
+console.log("Results in ResultsPanel:", results);
+console.log("Metadata in ResultsPanel:", results.metadata);
   return (
     <Box sx={{ width: '60%', height: '100%', display: 'flex', flexDirection: 'column', bgcolor: 'background.default' }}>
       <Box sx={{
@@ -19,6 +32,9 @@ export default function ResultsPanel({ loading, results, errors }) {
         top: 0,
         zIndex: 1,
         flexShrink: 0,
+        display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
       }}>
         <Typography sx={{
           fontSize: '0.65rem',
@@ -29,6 +45,15 @@ export default function ResultsPanel({ loading, results, errors }) {
         }}>
           Analysis Results
         </Typography>
+        <Button
+    size="small"
+    variant="contained"
+    startIcon={<DownloadIcon />}
+    disabled={!canDownload}
+    onClick={() => downloadAnalysis(articleText, results)}
+  >
+    Download JSON
+  </Button>
       </Box>
 
       <Box sx={{ overflowY: 'auto', flexGrow: 1, p: 3 }}>
